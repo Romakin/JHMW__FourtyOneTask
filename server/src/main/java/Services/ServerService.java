@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class ServerService {
 
-    private static ServerService instance;
+    private static volatile ServerService instance;
     private static ExecutorService executeIt;
 
     private ServerService() {
@@ -21,8 +21,14 @@ public class ServerService {
     }
 
     public static ServerService get() {
-        if(instance == null) instance = new ServerService();
-        return instance;
+        ServerService local = instance;
+        if (local == null) {
+            synchronized (ServerService.class) {
+                local = instance;
+                if (local == null) local = instance = new ServerService();
+            }
+        }
+        return local;
     }
 
     public ServerModel server() {
@@ -44,7 +50,7 @@ public class ServerService {
                 }
 
                 UserConnectionModel conn = UserConnectionService.get().connection(serverSocket.accept(), server);
-                server.getUserConns().addConnection(conn);
+                addUserConnection(server, conn);
                 executeIt.execute(new UserConnectionController(conn));
 
                 System.out.println("Connection accepted.");
@@ -54,6 +60,10 @@ public class ServerService {
         } catch (IOException e) {
             System.out.println("Server is already started");
         }
+    }
+
+    public void addUserConnection(ServerModel server, UserConnectionModel conn) {
+        server.getUserConns().addConnection(conn);
     }
 
     /**

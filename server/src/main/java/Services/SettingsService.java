@@ -4,11 +4,17 @@ import Models.SettingsModel;
 
 public class SettingsService {
 
-    private static SettingsService instance;
+    private static volatile SettingsService instance;
     private SettingsService() {}
     public static SettingsService get() {
-        if(instance == null) instance = new SettingsService();
-        return instance;
+        SettingsService local = instance;
+        if (local == null) {
+            synchronized (SettingsService.class) {
+                local = instance;
+                if (local == null) local = instance = new SettingsService();
+            }
+        }
+        return local;
     }
 
     public SettingsModel settings() {

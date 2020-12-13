@@ -1,4 +1,4 @@
 {
   "port": 8081,
-  "logPath": "./client2.log"
+  "logPath": "./logs/clients/client2.log"
 }

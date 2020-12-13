@@ -13,6 +13,12 @@ public class Main {
 
     public static void main(String[] args) {
         Runnable control = new ServerController(System.out, System.in);
-        new Thread(control, "ControllerThread").start();
+        control.run();
+        // new Thread(control, "ControllerThread").start();
+        /*
+        * ServerController реализован, как имплементация runnable по той причине, чтобы при дальнейших
+        *   доработках (если проект будет использоваться далее) была возможность расширить api класса
+        *   UserConnectionController в части управления сервером.
+        * */
     }
 }

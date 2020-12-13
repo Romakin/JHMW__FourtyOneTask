@@ -7,11 +7,17 @@ import java.net.Socket;
 
 public class UserConnectionService {
 
-    private static UserConnectionService instance;
+    private static volatile UserConnectionService instance;
     private UserConnectionService() {}
     public static UserConnectionService get() {
-        if(instance == null) instance = new UserConnectionService();
-        return instance;
+        UserConnectionService local = instance;
+        if (local == null) {
+            synchronized (UserConnectionService.class) {
+                local = instance;
+                if (local == null) local = instance = new UserConnectionService();
+            }
+        }
+        return local;
     }
 
     public UserConnectionModel connection(Socket sc, ServerModel server) {

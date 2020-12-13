@@ -1,97 +1,74 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.*;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
 
 public class Client {
 
-    private final String RESOURCE_NAME = "settings.json";
-    int port;
-    String logPath;
+    private ClientSettings settings;
+    private InputStream inStream;
+    private PrintStream outStream;
 
-    public Client() {
-        readSettings();
+    public Client(String[] args) {
+        if (args.length == 2)
+            try {
+                this.settings = new ClientSettings(Integer.parseInt(args[0]), args[1]);
+            } catch (Exception e) {}
+        if (this.settings == null)
+            this.settings = new ClientSettings();
+        inStream = System.in;
+        outStream = System.out;
+    }
+
+    public Client setInStream(InputStream clientStream) {
+        this.inStream = clientStream;
+        return this;
+    }
+
+    public Client setOutStream(PrintStream outStream) {
+        this.outStream = outStream;
+        return this;
     }
 
     public void start() {
-        try (
-                Socket socket = new Socket("localhost", port);
-        ) {
+        try (Socket socket = new Socket("localhost", settings.getPort())) {
             try (
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-                    Scanner scanner = new Scanner(System.in)
+                    Scanner scanner = new Scanner(inStream)
             ) {
-                String msg;
-                while (true) {
-
+                while (true)
                     if (in.ready()) {
-                        String line, response = "";
-                        while ((line = in.readLine()) != null) {
-                            if ("".equals(line.trim())) break;
-                            response += line + "\n";
-                        }
-                        System.out.println(response);
-                        log("<response> " + response);
-                        msg = scanner.nextLine();
-                        if ("end".equals(msg)) {
-                            System.out.println("client shutdown");
-                            break;
-                        }
-                        log("<request> " + msg);
-                        out.println(msg);
-                        out.flush();
+                        readInput(in);
+                        if (printOutput(out, scanner)) break;
                     }
-
-                }
             }
         } catch (IOException ex) {
-            System.out.println("Can not connect to this port");
+            this.outStream.println("Can not connect to this port");
         }
     }
 
-    public void readSettings() {
-        try (InputStream input = Client.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
-             InputStreamReader inr = new InputStreamReader(input)) {
-            LinkedTreeMap<String, Object> props = new Gson().fromJson(inr, LinkedTreeMap.class);
-            this.port = ((Double) props.get("port")).intValue();
-            this.logPath = (String) props.get("logPath");
-        } catch (IOException | JsonSyntaxException e) {
-            e.printStackTrace();
-            System.err.println("Something goes wrong while reading settings");
+    private boolean printOutput(PrintWriter out, Scanner scanner) {
+        String msg;
+        msg = scanner.nextLine();
+        if ("end".equals(msg)) {
+            this.outStream.println("client shutdown");
+            return true;
         }
+        settings.log("<request> " + msg);
+        out.println(msg);
+        out.flush();
+        return false;
     }
 
-    public void log(String log) {
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-        log = "<" + timeStamp + "> " + log;
-        saveToFile(logPath, log);
+    private void readInput(BufferedReader in) throws IOException {
+        String line, response = "";
+        while ((line = in.readLine()) != null) {
+            if ("".equals(line.trim())) break;
+            response += line + "\n";
+        }
+        this.outStream.println(response.replaceAll("\\{\\n\\}", "\n"));
+        settings.log("<response> " + response);
     }
 
-    public void saveToFile(String path, String log) {
-        File lf = new File(path);
-        if (!(lf.exists() && lf.canRead() && lf.canWrite())) {
-            try {
-                new File(lf.getParent()).mkdirs();
-                if (lf.createNewFile()) {
-                    System.out.println("File created");
-                } else {
-                    return;
-                }
-            } catch (IOException e) {
-                System.out.println("saveToFile: " + e.getMessage());
-                return;
-            }
-        }
-        try(FileOutputStream fos = new FileOutputStream(lf, true)) {
-            fos.write(log.getBytes());
-        } catch (IOException e) {
-            System.out.println("saveToFile: " + e.getMessage());
-        }
-    }
 }

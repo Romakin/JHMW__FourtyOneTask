@@ -8,7 +8,7 @@ import java.io.*;
  */
 public class LogService {
 
-    private static LogService instance;
+    private static volatile LogService instance;
     private static String logPath;
 
     private LogService(String logPath) {
@@ -16,12 +16,19 @@ public class LogService {
     }
 
     public static LogService get(String logPath) {
-        if(instance == null) instance = new LogService(logPath);
-        return instance;
+        LogService local = instance;
+        if (local == null) {
+            synchronized (LogService.class) {
+                local = instance;
+                if (local == null) local = instance = new LogService(logPath);
+            }
+        }
+        return local;
     }
 
     public static void log(String logPath, String log) {
         if(instance == null) get(logPath);
+        if (!log.endsWith("\n")) log += "\n";
         saveToFile(logPath, log);
     }
 

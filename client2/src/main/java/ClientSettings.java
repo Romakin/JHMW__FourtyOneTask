@@ -3,56 +3,27 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.*;
-import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
-public class Client {
-
+public class ClientSettings {
     private final String RESOURCE_NAME = "settings.json";
-    int port;
-    String logPath;
+    private int port;
+    private String logPath;
 
-    public Client() {
-        readSettings();
+    public ClientSettings() { readSettings(); }
+
+    public ClientSettings(int port, String logPath) {
+        this.port = port;
+        this.logPath = logPath;
     }
 
-    public void start() {
-        try (
-                Socket socket = new Socket("localhost", port);
-        ) {
-            try (
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-                    Scanner scanner = new Scanner(System.in)
-            ) {
-                String msg;
-                while (true) {
+    public int getPort() {
+        return port;
+    }
 
-                    if (in.ready()) {
-                        String line, response = "";
-                        while ((line = in.readLine()) != null) {
-                            if ("".equals(line.trim())) break;
-                            response += line + "\n";
-                        }
-                        System.out.println(response);
-                        log("<response> " + response);
-                        msg = scanner.nextLine();
-                        if ("end".equals(msg)) {
-                            System.out.println("client shutdown");
-                            break;
-                        }
-                        log("<request> " + msg);
-                        out.println(msg);
-                        out.flush();
-                    }
-
-                }
-            }
-        } catch (IOException ex) {
-            System.out.println("Can not connect to this port");
-        }
+    public String getLogPath() {
+        return logPath;
     }
 
     public void readSettings() {
@@ -69,11 +40,11 @@ public class Client {
 
     public void log(String log) {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-        log = "<" + timeStamp + "> " + log;
+        log = "<" + timeStamp + "> " + log +"\n";
         saveToFile(logPath, log);
     }
 
-    public void saveToFile(String path, String log) {
+    private void saveToFile(String path, String log) {
         File lf = new File(path);
         if (!(lf.exists() && lf.canRead() && lf.canWrite())) {
             try {

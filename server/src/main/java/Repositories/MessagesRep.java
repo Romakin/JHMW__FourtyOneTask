@@ -37,7 +37,7 @@ public class MessagesRep implements Comparable<MessagesRep> {
     public String getAllMessages() {
         StringBuilder sb = new StringBuilder();
         for(String msg : messages) {
-            sb.append(msg + "\n");
+            sb.append(msg + "{\\n}");
         }
         return sb.toString();
     }
@@ -45,7 +45,7 @@ public class MessagesRep implements Comparable<MessagesRep> {
     public String getOnlineUserNames() {
         StringBuilder sb = new StringBuilder();
         for(UserModel user : users) {
-            sb.append(user.getUsername() + "\n");
+            sb.append(user.getUsername() + ";");
         }
         return sb.toString();
     }
