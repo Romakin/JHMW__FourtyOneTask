@@ -2,9 +2,9 @@
 
 Выполнено следующее:
 
-**Первое приложение - [сервер чата](./server/src/main/java/org/example/Main.java);.**
+**Первое приложение - [сервер чата](./server/src/main/java/Main.java);.**
 
-**Второе приложение - [клиент чата](./client1/src/main/java/org/example/Client.java);.**
+**Второе приложение - [клиент чата](./client1/src/main/java/Client.java);.**
 
 Все сообщения записываются в .log afqks как на сервере (server.log), так и на клиентах (client1.log, client2.log).
 File.log должен дополняется при каждом запуске, а также при отправленном или полученном сообщении. 
