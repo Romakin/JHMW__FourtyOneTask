@@ -1,10 +1,10 @@
-package Controllers;
+package org.example.server.Controllers;
 
-import Models.UserConnectionModel;
-import Repositories.MessagesRep;
-import Services.LogService;
-import Services.SettingsService;
-import Services.UserConnectionService;
+import org.example.server.Models.UserConnectionModel;
+import org.example.server.Repositories.MessagesRep;
+import org.example.server.Services.LogService;
+import org.example.server.Services.SettingsService;
+import org.example.server.Services.UserConnectionService;
 
 import java.io.*;
 import java.text.SimpleDateFormat;

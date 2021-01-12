@@ -1,4 +1,6 @@
-import Controllers.ServerController;
+package org.example.server;
+
+import org.example.server.Controllers.ServerController;
 
 /**
  * Задание выполнено в 3ех разных модулях:

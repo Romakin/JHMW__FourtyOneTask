@@ -1,8 +1,8 @@
-package Models;
+package org.example.server.Models;
 
-import Repositories.ChartsRep;
-import Repositories.MessagesRep;
-import Repositories.UserConnectionRep;
+import org.example.server.Repositories.ChartsRep;
+import org.example.server.Repositories.MessagesRep;
+import org.example.server.Repositories.UserConnectionRep;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

@@ -1,7 +1,8 @@
+import org.example.client.ClientSettings;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
 
@@ -28,19 +29,19 @@ public class ClientSettingsTest {
 
     @Test
     public void testDefaultAutoSet() {
-        Assertions.assertTrue(csDef.getPort() == 8081 && csDef.getLogPath().equals("./logs/clients/client2.log"));
+        Assert.assertTrue(csDef.getPort() == 8081 && csDef.getLogPath().equals("./logs/clients/client2.log"));
     }
 
     @Test
     public void testLog() {
         cs.log("test log");
-        Assertions.assertTrue(new File(cs.getLogPath()).exists());
+        Assert.assertTrue(new File(cs.getLogPath()).exists());
     }
 
     @Test
     public void testDefaultLog() {
         csDef.log("test default log");
-        Assertions.assertTrue(new File(csDef.getLogPath()).exists());
+        Assert.assertTrue(new File(csDef.getLogPath()).exists());
     }
 
 

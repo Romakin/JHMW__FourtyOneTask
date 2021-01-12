@@ -1,4 +1,4 @@
-package Models;
+package org.example.server.Models;
 
 import java.net.Socket;
 import java.util.ArrayList;

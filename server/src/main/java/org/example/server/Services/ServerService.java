@@ -1,9 +1,10 @@
-package Services;
+package org.example.server.Services;
 
-import Controllers.UserConnectionController;
-import Models.ServerModel;
-import Models.SettingsModel;
-import Models.UserConnectionModel;
+import org.example.server.Controllers.UserConnectionController;
+import org.example.server.Models.ServerModel;
+import org.example.server.Models.SettingsModel;
+import org.example.server.Models.UserConnectionModel;
+import net.jcip.annotations.ThreadSafe;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,24 +12,18 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@ThreadSafe
 public class ServerService {
 
-    private static volatile ServerService instance;
+    private static final ServerService instance = new ServerService();
     private static ExecutorService executeIt;
+
+    public static ServerService get() {
+        return instance;
+    }
 
     private ServerService() {
         executeIt = Executors.newCachedThreadPool();
-    }
-
-    public static ServerService get() {
-        ServerService local = instance;
-        if (local == null) {
-            synchronized (ServerService.class) {
-                local = instance;
-                if (local == null) local = instance = new ServerService();
-            }
-        }
-        return local;
     }
 
     public ServerModel server() {

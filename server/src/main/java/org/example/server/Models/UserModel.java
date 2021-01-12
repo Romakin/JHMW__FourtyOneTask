@@ -1,6 +1,6 @@
-package Models;
+package org.example.server.Models;
 
-import Repositories.MessagesRep;
+import org.example.server.Repositories.MessagesRep;
 
 public class UserModel implements Comparable<UserModel> {
 

@@ -1,3 +1,4 @@
+package org.example.client;
 
 import java.io.*;
 import java.net.Socket;
@@ -10,10 +11,12 @@ public class Client {
     private PrintStream outStream;
 
     public Client(String[] args) {
-        if (args.length == 2)
-            try {
-                this.settings = new ClientSettings(Integer.parseInt(args[0]), args[1]);
-            } catch (Exception e) {}
+        try {
+            if (args.length == 2)
+                    this.settings = new ClientSettings(Integer.parseInt(args[0]), args[1]);
+            else
+                this.settings = new ClientSettings().setPort(Integer.parseInt(args[0]));
+        } catch (Exception e) {}
         if (this.settings == null)
             this.settings = new ClientSettings();
         inStream = System.in;
@@ -28,6 +31,14 @@ public class Client {
     public Client setOutStream(PrintStream outStream) {
         this.outStream = outStream;
         return this;
+    }
+
+    public InputStream getInStream() {
+        return inStream;
+    }
+
+    public PrintStream getOutStream() {
+        return outStream;
     }
 
     public void start() {
@@ -61,7 +72,7 @@ public class Client {
         return false;
     }
 
-    private void readInput(BufferedReader in) throws IOException {
+    public void readInput(BufferedReader in) throws IOException {
         String line, response = "";
         while ((line = in.readLine()) != null) {
             if ("".equals(line.trim())) break;
@@ -71,4 +82,7 @@ public class Client {
         settings.log("<response> " + response);
     }
 
+    public ClientSettings getSettings() {
+        return settings;
+    }
 }

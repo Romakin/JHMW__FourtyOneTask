@@ -1,9 +1,9 @@
-package Controllers;
+package org.example.server.Controllers;
 
-import Models.ServerModel;
-import Services.LogService;
-import Services.ServerService;
-import Services.SettingsService;
+import org.example.server.Models.ServerModel;
+import org.example.server.Services.LogService;
+import org.example.server.Services.ServerService;
+import org.example.server.Services.SettingsService;
 
 import java.io.*;
 import java.util.Scanner;

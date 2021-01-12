@@ -1,14 +1,17 @@
+package org.example.client;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 public class ClientSettings {
     private final String RESOURCE_NAME = "settings.json";
-    private int port;
+    private Integer port = null;
     private String logPath;
 
     public ClientSettings() { readSettings(); }
@@ -22,16 +25,23 @@ public class ClientSettings {
         return port;
     }
 
+    public ClientSettings setPort(int port) {
+        if(this.port == null) this.port = port;
+        return this;
+    }
+
     public String getLogPath() {
         return logPath;
     }
 
     public void readSettings() {
-        try (InputStream input = Client.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
-             InputStreamReader inr = new InputStreamReader(input)) {
-            LinkedTreeMap<String, Object> props = new Gson().fromJson(inr, LinkedTreeMap.class);
-            this.port = ((Double) props.get("port")).intValue();
-            this.logPath = (String) props.get("logPath");
+        try (InputStream input = Client.class.getClassLoader().getResourceAsStream(RESOURCE_NAME)) {
+            assert input != null;
+            try (InputStreamReader inr = new InputStreamReader(input)) {
+                LinkedTreeMap<String, Object> props = new Gson().fromJson(inr, LinkedTreeMap.class);
+                this.port = ((Double) props.get("port")).intValue();
+                this.logPath = (String) props.get("logPath");
+            }
         } catch (IOException | JsonSyntaxException e) {
             e.printStackTrace();
             System.err.println("Something goes wrong while reading settings");

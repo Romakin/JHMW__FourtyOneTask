@@ -1,5 +1,5 @@
-import Models.SettingsModel;
-import Services.SettingsService;
+import org.example.server.Models.SettingsModel;
+import org.example.server.Services.SettingsService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 

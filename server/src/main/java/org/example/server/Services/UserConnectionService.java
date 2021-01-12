@@ -1,23 +1,18 @@
-package Services;
+package org.example.server.Services;
 
-import Models.ServerModel;
-import Models.UserConnectionModel;
+import org.example.server.Models.ServerModel;
+import org.example.server.Models.UserConnectionModel;
+import net.jcip.annotations.ThreadSafe;
 
 import java.net.Socket;
 
+@ThreadSafe
 public class UserConnectionService {
 
-    private static volatile UserConnectionService instance;
+    private static final UserConnectionService instance = new UserConnectionService();
     private UserConnectionService() {}
     public static UserConnectionService get() {
-        UserConnectionService local = instance;
-        if (local == null) {
-            synchronized (UserConnectionService.class) {
-                local = instance;
-                if (local == null) local = instance = new UserConnectionService();
-            }
-        }
-        return local;
+        return instance;
     }
 
     public UserConnectionModel connection(Socket sc, ServerModel server) {

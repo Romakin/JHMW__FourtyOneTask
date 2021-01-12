@@ -1,6 +1,6 @@
-package Repositories;
+package org.example.server.Repositories;
 
-import Models.UserConnectionModel;
+import org.example.server.Models.UserConnectionModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;

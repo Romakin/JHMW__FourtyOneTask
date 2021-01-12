@@ -1,4 +1,4 @@
-import Services.LogService;
+import org.example.server.Services.LogService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 

@@ -1,8 +1,8 @@
-import Models.ServerModel;
-import Models.UserConnectionModel;
-import Repositories.MessagesRep;
-import Services.ServerService;
-import Services.UserConnectionService;
+import org.example.server.Models.ServerModel;
+import org.example.server.Models.UserConnectionModel;
+import org.example.server.Repositories.MessagesRep;
+import org.example.server.Services.ServerService;
+import org.example.server.Services.UserConnectionService;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.List;

@@ -1,4 +1,7 @@
-package Services;
+package org.example.server.Services;
+
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
 import java.io.*;
 
@@ -6,24 +9,21 @@ import java.io.*;
  * Возможные улучшения - выделить контроллер для логов и сделать там
  *  потокобезопасную очередь + поставить временной шедулер для разбора очереди в файл и запись.
  */
+@ThreadSafe
 public class LogService {
 
-    private static volatile LogService instance;
-    private static String logPath;
+    private static final LogService instance = new LogService();
+    @GuardedBy("this") private String logPath;
 
-    private LogService(String logPath) {
-        this.logPath = logPath;
+    private LogService() {}
+
+    public synchronized void setLogPath(String logPath) {
+        if (this.logPath == null) this.logPath = logPath;
     }
 
     public static LogService get(String logPath) {
-        LogService local = instance;
-        if (local == null) {
-            synchronized (LogService.class) {
-                local = instance;
-                if (local == null) local = instance = new LogService(logPath);
-            }
-        }
-        return local;
+        instance.setLogPath(logPath);
+        return instance;
     }
 
     public static void log(String logPath, String log) {

@@ -1,4 +1,4 @@
-package Models;
+package org.example.server.Models;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

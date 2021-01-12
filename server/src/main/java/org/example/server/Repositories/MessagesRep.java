@@ -1,6 +1,6 @@
-package Repositories;
+package org.example.server.Repositories;
 
-import Models.UserModel;
+import org.example.server.Models.UserModel;
 
 import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
